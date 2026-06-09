@@ -13,47 +13,18 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
-    - name: basic_test
-      id: basic_test
-      uses: classroom-resources/autograding-io-grader@v1
+    - name: Pytest_Normalized_Array
+      id: pytest_normalized_array
+      uses: classroom-resources/autograding-command-grader@v1
       with:
-        test-name: basic_test
-        setup-command: ''
-        command: python factors.py
-        input: "[10, 20, 30]"
-        expected-output: np.array([0.0, 0.5, 1.0])
-        comparison-method: exact
+        test-name: Pytest_Normalized_Array
+        setup-command: pip install numpy pytest
+        command: pytest test_exercise.py
         timeout: 10
-        max-score: 40
-    - name: test_all_same_values
-      id: test_all_same_values
-      uses: classroom-resources/autograding-io-grader@v1
-      with:
-        test-name: test_all_same_values
-        setup-command: ''
-        command: python factors.py
-        input: "[5, 5, 5]"
-        expected-output: np.array([0.0, 0.0, 0.0])
-        comparison-method: exact
-        timeout: 10
-        max-score: 30
-    - name: test_negative_values
-      id: test_negative_values
-      uses: classroom-resources/autograding-io-grader@v1
-      with:
-        test-name: test_negative_values
-        setup-command: ''
-        command: python factors.py
-        input: "[-10, 0, 10]"
-        expected-output: np.array([0.0, 0.5, 1.0])
-        comparison-method: exact
-        timeout: 10
-        max-score: 30
+        max-score: 100
     - name: Autograding Reporter
       uses: classroom-resources/autograding-grading-reporter@v1
       env:
-        BASIC_TEST_RESULTS: "${{steps.basic_test.outputs.result}}"
-        TEST_ALL_SAME_VALUES_RESULTS: "${{steps.test_all_same_values.outputs.result}}"
-        TEST_NEGATIVE_VALUES_RESULTS: "${{steps.test_negative_values.outputs.result}}"
+        PYTEST_NORMALIZED_ARRAY_RESULTS: "${{steps.pytest_normalized_array.outputs.result}}"
       with:
-        runners: basic_test,test_all_same_values,test_negative_values
+        runners: pytest_normalized_array
