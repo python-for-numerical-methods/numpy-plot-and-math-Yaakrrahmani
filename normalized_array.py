@@ -1,31 +1,28 @@
 import numpy as np
 
-def rescale_features(data_input):
-    """
-    מבצע נרמול מינימום-מקסימום (Min-Max Scaling) לטווח של 0 עד 1.
-    """
-    # המרה למערך נומפאי עם תמיכה במספרים עשרוניים
-    x = np.asarray(data_input, dtype=np.float64)
+def normalized_array(arr_in):
+    # המרת הקלט למערך נומפאי מטיפוס float64
+    vector = np.asarray(arr_in, dtype=np.float64)
     
-    # טיפול במערך ריק באמצעות תכונת ה-size
-    if x.size == 0:
-        return np.empty(0)
-        
-    # שליפת ערכי המינימום והמקסימום ישירות מהאובייקט
-    low, high = x.min(), x.max()
-    span = high - low
+    # בדיקת מגן למקרה של מערך ללא איברים
+    if vector.size == 0:
+        return np.array([])
     
-    # מניעת חלוקה באפס במידה וכל האיברים במערך זהים
-    if span == 0:
-        return np.zeros_like(x)
-        
-    # חישוב הטווח המנורמל והחזרת התוצאה
-    return (x - low) / span
+    # שליפת ערכי הקצה של המערך
+    minimum = vector.min()
+    maximum = vector.max()
+    
+    # חישוב הטווח - מונע חלוקה באפס במידה וכל הערכים זהים
+    variance_range = maximum - minimum
+    if variance_range == 0:
+        return np.zeros_like(vector)
+    
+    # נרמול הערכים לטווח של 0-1
+    normalized_output = (vector - minimum) / variance_range
+    return normalized_output
 
 if __name__ == "__main__":
-    # בדיקת תקינות הלוגיקה
-    test_values = [10, 20, 30, 40, 50]
-    normalized_values = rescale_features(test_values)
-    
-    print(f"Original: {test_values}")
-    print(f"Scaled:   {normalized_values}")
+    # בדיקה מקומית
+    demo_data = [10, 20, 30, 40, 50]
+    print(f"Original: {demo_data}")
+    print(f"Result:   {normalized_array(demo_data)}")
